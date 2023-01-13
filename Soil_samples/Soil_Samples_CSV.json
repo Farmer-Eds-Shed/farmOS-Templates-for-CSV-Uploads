@@ -1,0 +1,196 @@
+[
+    {
+        "id": "d017e12d25aa8fae",
+        "type": "tab",
+        "label": "Soil Samples CSV",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f9792d16d0fd169c",
+        "type": "csv",
+        "z": "d017e12d25aa8fae",
+        "name": "",
+        "sep": ";",
+        "hdrin": true,
+        "hdrout": "none",
+        "multi": "mult",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 690,
+        "y": 220,
+        "wires": [
+            [
+                "f3e38a43d8f3d1ff"
+            ]
+        ]
+    },
+    {
+        "id": "066df88f557b9f8a",
+        "type": "file in",
+        "z": "d017e12d25aa8fae",
+        "name": "",
+        "filename": "/ANALYSE.DAT",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 520,
+        "y": 220,
+        "wires": [
+            [
+                "f9792d16d0fd169c"
+            ]
+        ]
+    },
+    {
+        "id": "4aecd432a3feab0d",
+        "type": "inject",
+        "z": "d017e12d25aa8fae",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 350,
+        "y": 220,
+        "wires": [
+            [
+                "066df88f557b9f8a"
+            ]
+        ]
+    },
+    {
+        "id": "66b87a5f059ed311",
+        "type": "function",
+        "z": "d017e12d25aa8fae",
+        "name": "Create Entites",
+        "func": "//Declare UUID function\nvar uuidv1 = global.get('uuidv1');\n\n// Requires External UUID JS Library\n// 'npm install uuid'\n// See Description Button above.\n\n\n\n//Generate UUID's for each quantity\nvar UUIDph = uuidv1();\nvar UUIDpa1 = uuidv1();\nvar UUIDka1 = uuidv1();\nvar UUIDmga1 = uuidv1();\nvar UUIDca1 = uuidv1();\nvar UUIDmold = uuidv1();\nvar UUIDmoldklasse = uuidv1();\nvar UUIDglodetap = uuidv1();\nvar UUIDvolumvekt = uuidv1();\nvar UUIDleirklasse = uuidv1();\nvar UUIDjordart = uuidv1();\n\n//Quantites JSON\nvar ph = {\n    \"data\": {\n        \"type\": \"quantity--test\",\n        \"id\": UUIDph,\n        \"attributes\": {\n            \"value\": {\n                \"numerator\": msg.payload.pH,\n                \"denominator\": 1,\n                \"decimal\": msg.payload.pH\n            },\n            \"label\": \"pH\"\n        }\n    }\n}\nmsg.ph = JSON.stringify(ph);\n\nvar pa1 = {\n    \"data\": {\n        \"type\": \"quantity--test\",\n        \"id\": UUIDpa1,\n        \"attributes\": {\n            \"value\": {\n                \"numerator\": msg.payload[\"P-Al\"],\n                \"denominator\": 1,\n                \"decimal\": msg.payload[\"P-Al\"]\n            },\n            \"label\": \"P-Al\"\n        }\n    }\n}\nmsg.pa1 = JSON.stringify(pa1);\n\nvar ka1 = {\n    \"data\": {\n        \"type\": \"quantity--test\",\n        \"id\": UUIDka1,\n        \"attributes\": {\n            \"value\": {\n                \"numerator\": msg.payload[\"K-Al\"],\n                \"denominator\": 1,\n                \"decimal\": msg.payload[\"K-Al\"]\n            },\n            \"label\": \"K-Al\"\n        }\n    }\n}\nmsg.ka1 = JSON.stringify(ka1);\n\nvar mga1 = {\n    \"data\": {\n        \"type\": \"quantity--test\",\n        \"id\": UUIDmga1,\n        \"attributes\": {\n            \"value\": {\n                \"numerator\": msg.payload[\"Mg-Al\"],\n                \"denominator\": 1,\n                \"decimal\": msg.payload[\"Mg-Al\"]\n            },\n            \"label\": \"Mg-Al\"\n        }\n    }\n}\nmsg.mga1 = JSON.stringify(mga1);\n\nvar ca1 = {\n    \"data\": {\n        \"type\": \"quantity--test\",\n        \"id\": UUIDca1,\n        \"attributes\": {\n            \"value\": {\n                \"numerator\": msg.payload[\"Ca-Al\"],\n                \"denominator\": 1,\n                \"decimal\": msg.payload[\"Ca-Al\"]\n            },\n            \"label\": \"Ca-Al\"\n        }\n    }\n}\nmsg.ca1 = JSON.stringify(ca1);\n\nvar mold = {\n    \"data\": {\n        \"type\": \"quantity--test\",\n        \"id\": UUIDmold,\n        \"attributes\": {\n            \"value\": {\n                \"numerator\": msg.payload[\"Mold%\"],\n                \"denominator\": 1,\n                \"decimal\": msg.payload[\"Mold%\"]\n            },\n            \"label\": \"Mold%\"\n        }\n    }\n}\nmsg.mold = JSON.stringify(mold);\n\nvar moldklasse = {\n    \"data\": {\n        \"type\": \"quantity--test\",\n        \"id\": UUIDmoldklasse,\n        \"attributes\": {\n            \"value\": {\n                \"numerator\": msg.payload.Moldklasse,\n                \"denominator\": 1,\n                \"decimal\": msg.payload.Moldklasse\n            },\n            \"label\": \"Moldklasse\"\n        }\n    }\n}\nmsg.moldklasse = JSON.stringify(moldklasse);\n\nvar glodetap = {\n    \"data\": {\n        \"type\": \"quantity--test\",\n        \"id\": UUIDglodetap,\n        \"attributes\": {\n            \"value\": {\n                \"numerator\": msg.payload.Glodetap,\n                \"denominator\": 1,\n                \"decimal\": msg.payload.Glodetap\n            },\n            \"label\": \"Glødetap\"\n        }\n    }\n}\nmsg.glodetap = JSON.stringify(glodetap);\n\nvar volumvekt = {\n    \"data\": {\n        \"type\": \"quantity--test\",\n        \"id\": UUIDvolumvekt,\n        \"attributes\": {\n            \"value\": {\n                \"numerator\": msg.payload.Volumvekt,\n                \"denominator\": 1,\n                \"decimal\": msg.payload.Volumvekt\n            },\n            \"label\": \"Volumvekt\"\n        }\n    }\n}\nmsg.volumvekt = JSON.stringify(volumvekt);\n\nvar leirklasse  = {\n    \"data\": {\n        \"type\": \"quantity--test\",\n        \"id\": UUIDleirklasse,\n        \"attributes\": {\n            \"value\": {\n                \"numerator\": msg.payload.Leirklasse,\n                \"denominator\": 1,\n                \"decimal\": msg.payload.Leirklasse\n            },\n            \"label\": \"Leirklasse\"\n        }\n    }\n}\nmsg.leirklasse = JSON.stringify(leirklasse);\n\nvar jordart = {\n    \"data\": {\n        \"type\": \"quantity--test\",\n        \"id\": UUIDjordart,\n        \"attributes\": {\n            \"value\": {\n                \"numerator\": msg.payload.Jordart,\n                \"denominator\": 1,\n                \"decimal\": msg.payload.Jordart\n            },\n            \"label\": \"Jordart\"\n        }\n    }\n}\nmsg.jordart = JSON.stringify(jordart);\n\n//Log JSON\nvar log = {\n    \"data\": {\n        \"type\": \"log--lab_test\",\n        \"attributes\": {\n            \"name\": \"Soil Test \" + msg.payload.Provenr,\n            \"status\": \"done\"\n        },\n        \"relationships\": {\n            \"quantity\": {\n                \"data\": [\n                    {\n                        \"type\": \"quantity--test\",\n                        \"id\": UUIDph\n                    },\n                    {\n                        \"type\": \"quantity--test\",\n                        \"id\": UUIDpa1\n                    },\n                    {\n                        \"type\": \"quantity--test\",\n                        \"id\": UUIDka1\n                    },\n                    {\n                        \"type\": \"quantity--test\",\n                        \"id\": UUIDmga1\n                    },\n                    {\n                        \"type\": \"quantity--test\",\n                        \"id\": UUIDca1\n                    },\n                    {\n                        \"type\": \"quantity--test\",\n                        \"id\": UUIDmold\n                    },\n                    {\n                        \"type\": \"quantity--test\",\n                        \"id\": UUIDmoldklasse\n                    },\n                    {\n                        \"type\": \"quantity--test\",\n                        \"id\": UUIDglodetap\n                    },\n                    {\n                        \"type\": \"quantity--test\",\n                        \"id\": UUIDvolumvekt\n                    },\n                    {\n                        \"type\": \"quantity--test\",\n                        \"id\": UUIDleirklasse\n                    },\n                    {\n                        \"type\": \"quantity--test\",\n                        \"id\": UUIDjordart\n                    }\n                ]\n            }\n        \n        }\n    }\n}\nmsg.log = JSON.stringify(log);\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 440,
+        "wires": [
+            [
+                "f27c0b63b3e2b406"
+            ]
+        ],
+        "info": "Requires External JS library:\r\nhttps://discourse.nodered.org/t/generation-of-uuid-in-function-node/2381/4\r\n\r\n# install UUID Library\r\nnpm install uuid\r\n\r\n# add to settings.js\r\n\r\n    functionGlobalContext: {\r\n        // os:require('os'),\r\n\tuuidv1:require('C:/Users/youruser/node_modules/uuid/v1')\r\n\r\n    },"
+    },
+    {
+        "id": "f27c0b63b3e2b406",
+        "type": "function",
+        "z": "d017e12d25aa8fae",
+        "name": "Subrequest",
+        "func": "\n\nvar token = global.get(\"token\");\nmsg.payload = [\n    {\n        \"requestId\": \"req-1\",\n        \"uri\": \"/api/quantity/test\",\n        \"action\": \"create\",\n        \"body\": msg.ph,\n        \"headers\": {\n            \"Accept\": \"application/vnd.api+json\",\n            \"Content-Type\": \"application/vnd.api+json\",\n            \"Authorization\": \"Bearer \" + token\n        }\n    },\n    {\n        \"requestId\": \"req-2\",\n        \"waitFor\": [\"req-1\"],\n        \"uri\": \"/api/quantity/test\",\n        \"action\": \"create\",\n        \"body\": msg.pa1,\n        \"headers\": {\n            \"Accept\": \"application/vnd.api+json\",\n            \"Content-Type\": \"application/vnd.api+json\",\n            \"Authorization\": \"Bearer \" + token\n        }\n    },\n    {\n        \"requestId\": \"req-3\",\n        \"waitFor\": [\"req-2\"],\n        \"uri\": \"/api/quantity/test\",\n        \"action\": \"create\",\n        \"body\": msg.ka1,\n        \"headers\": {\n            \"Accept\": \"application/vnd.api+json\",\n            \"Content-Type\": \"application/vnd.api+json\",\n            \"Authorization\": \"Bearer \" + token\n        }\n    },\n    {\n        \"requestId\": \"req-4\",\n        \"waitFor\": [\"req-3\"],\n        \"uri\": \"/api/quantity/test\",\n        \"action\": \"create\",\n        \"body\": msg.mga1,\n        \"headers\": {\n            \"Accept\": \"application/vnd.api+json\",\n            \"Content-Type\": \"application/vnd.api+json\",\n            \"Authorization\": \"Bearer \" + token\n        }\n    },\n    {\n        \"requestId\": \"req-5\",\n        \"waitFor\": [\"req-4\"],\n        \"uri\": \"/api/quantity/test\",\n        \"action\": \"create\",\n        \"body\": msg.ca1,\n        \"headers\": {\n            \"Accept\": \"application/vnd.api+json\",\n            \"Content-Type\": \"application/vnd.api+json\",\n            \"Authorization\": \"Bearer \" + token\n        }\n    },\n    {\n        \"requestId\": \"req-6\",\n        \"waitFor\": [\"req-5\"],\n        \"uri\": \"/api/quantity/test\",\n        \"action\": \"create\",\n        \"body\": msg.mold,\n        \"headers\": {\n            \"Accept\": \"application/vnd.api+json\",\n            \"Content-Type\": \"application/vnd.api+json\",\n            \"Authorization\": \"Bearer \" + token\n        }\n    },\n    {\n        \"requestId\": \"req-7\",\n        \"waitFor\": [\"req-6\"],\n        \"uri\": \"/api/quantity/test\",\n        \"action\": \"create\",\n        \"body\": msg.moldklasse,\n        \"headers\": {\n            \"Accept\": \"application/vnd.api+json\",\n            \"Content-Type\": \"application/vnd.api+json\",\n            \"Authorization\": \"Bearer \" + token\n        }\n    },\n    {\n        \"requestId\": \"req-8\",\n        \"waitFor\": [\"req-7\"],\n        \"uri\": \"/api/quantity/test\",\n        \"action\": \"create\",\n        \"body\": msg.glodetap,\n        \"headers\": {\n            \"Accept\": \"application/vnd.api+json\",\n            \"Content-Type\": \"application/vnd.api+json\",\n            \"Authorization\": \"Bearer \" + token\n        }\n    },\n    {\n        \"requestId\": \"req-9\",\n        \"waitFor\": [\"req-8\"],\n        \"uri\": \"/api/quantity/test\",\n        \"action\": \"create\",\n        \"body\": msg.volumvekt,\n        \"headers\": {\n            \"Accept\": \"application/vnd.api+json\",\n            \"Content-Type\": \"application/vnd.api+json\",\n            \"Authorization\": \"Bearer \" + token\n        }\n    },\n    {\n        \"requestId\": \"req-10\",\n        \"waitFor\": [\"req-9\"],\n        \"uri\": \"/api/quantity/test\",\n        \"action\": \"create\",\n        \"body\": msg.leirklasse,\n        \"headers\": {\n            \"Accept\": \"application/vnd.api+json\",\n            \"Content-Type\": \"application/vnd.api+json\",\n            \"Authorization\": \"Bearer \" + token\n        }\n    },\n    {\n        \"requestId\": \"req-11\",\n        \"waitFor\": [\"req-10\"],\n        \"uri\": \"/api/quantity/test\",\n        \"action\": \"create\",\n        \"body\": msg.jordart,\n        \"headers\": {\n            \"Accept\": \"application/vnd.api+json\",\n            \"Content-Type\": \"application/vnd.api+json\",\n            \"Authorization\": \"Bearer \" + token\n        }\n    },\n    {\n        \"requestId\": \"req-12\",\n        \"waitFor\": [\"req-11\"],\n        \"uri\": \"/api/log/lab_test\",\n        \"action\": \"create\",\n        \"body\": msg.log,\n        \"headers\": {\n            \"Accept\": \"application/vnd.api+json\",\n            \"Content-Type\": \"application/vnd.api+json\",\n            \"Authorization\": \"Bearer \" + token\n        }\n    }\n]\n\n\nmsg.headers = {};\nmsg.headers['Authorization'] = \"Bearer \" + token;\nmsg.headers['Accept'] = \"application/vnd.api+json\";\nmsg.headers['content-type'] = 'application/vnd.api+json';\nmsg.url = global.get('farmOSurl').concat('/subrequests?_format=json')\nmsg.method = \"POST\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 440,
+        "wires": [
+            [
+                "0002094ec4a90ecd"
+            ]
+        ]
+    },
+    {
+        "id": "b95f31a57221b0d5",
+        "type": "http request",
+        "z": "d017e12d25aa8fae",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1150,
+        "y": 440,
+        "wires": [
+            [
+                "a66d8e7bd9745f9d"
+            ]
+        ]
+    },
+    {
+        "id": "a66d8e7bd9745f9d",
+        "type": "debug",
+        "z": "d017e12d25aa8fae",
+        "name": "debug 16",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1320,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "0002094ec4a90ecd",
+        "type": "delay",
+        "z": "d017e12d25aa8fae",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 970,
+        "y": 440,
+        "wires": [
+            [
+                "b95f31a57221b0d5"
+            ]
+        ]
+    },
+    {
+        "id": "f3e38a43d8f3d1ff",
+        "type": "function",
+        "z": "d017e12d25aa8fae",
+        "name": "Get CSV",
+        "func": "//var CSV = flow.get(\"CSV\");\nvar CSV = msg.payload;\nlet outputMsgs = [];\n\n//for hver \nCSV.forEach(data => {\n  outputMsgs.push({payload:data});\n    })\n\nreturn [ outputMsgs ];\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 220,
+        "wires": [
+            [
+                "66b87a5f059ed311"
+            ]
+        ]
+    }
+]
