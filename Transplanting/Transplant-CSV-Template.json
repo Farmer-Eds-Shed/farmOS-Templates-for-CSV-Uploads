@@ -1,5 +1,56 @@
 [
     {
+        "id": "1387b81f8c3249db",
+        "type": "subflow",
+        "name": "SubRequet",
+        "info": "",
+        "category": "farmOS V2",
+        "in": [
+            {
+                "x": 40,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "569dbf148deda98e"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 340,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "569dbf148deda98e",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#C7E9C0",
+        "icon": "font-awesome/fa-leaf"
+    },
+    {
+        "id": "569dbf148deda98e",
+        "type": "function",
+        "z": "1387b81f8c3249db",
+        "name": "Subrequest",
+        "func": "var token = global.get(\"token\");\nmsg.payload = [];\nvar i = 1;\nvar req = msg.req; \nvar sub; \n\nreq.forEach(data => {\n    let apiType = data.body.data.type;\n    let uri = apiType.replace(/--/g, \"/\");\n       \n    if (data.waitFor === undefined){  \n       sub = {\n           \"requestId\": \"req-\" + i,\n           \"uri\": \"/api/\" + uri,\n           \"action\": data.action,\n           \"body\": JSON.stringify(data.body),\n           \"headers\": {\n               \"Accept\": \"application/vnd.api+json\",\n               \"Content-Type\": \"application/vnd.api+json\",\n               \"Authorization\": \"Bearer \" + token\n           }\n       }\n    }\n\n    else {\n        sub = {\n            \"requestId\": \"req-\" + i,\n            \"waitfor\": data.waitFor,\n            \"uri\": \"/api/\" + uri,\n            \"action\": data.action,\n            \"body\": JSON.stringify(data.body),\n            \"headers\": {\n                \"Accept\": \"application/vnd.api+json\",\n                \"Content-Type\": \"application/vnd.api+json\",\n                \"Authorization\": \"Bearer \" + token\n            }\n        }\n    }\n       i++\n    msg.payload.push(sub);\n})\n    \nmsg.headers = {};\nmsg.headers['Authorization'] = \"Bearer \" + token;\nmsg.headers['Accept'] = \"application/vnd.api+json\";\nmsg.headers['content-type'] = 'application/vnd.api+json';\nmsg.url = global.get('farmOSurl').concat('/subrequests?_format=json')\nmsg.method = \"POST\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 190,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
         "id": "fdfd790779661d44",
         "type": "tab",
         "label": "Transplanting CSV Upload",
@@ -12,7 +63,7 @@
         "type": "sf:895a366cbeeeb85e",
         "z": "fdfd790779661d44",
         "name": "",
-        "x": 540,
+        "x": 520,
         "y": 120,
         "wires": [
             [
@@ -52,7 +103,7 @@
                 "type": "msg"
             }
         ],
-        "x": 330,
+        "x": 310,
         "y": 120,
         "wires": [
             [
@@ -71,7 +122,7 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 150,
+        "x": 130,
         "y": 120,
         "wires": [
             [
@@ -90,7 +141,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 540,
+        "x": 520,
         "y": 660,
         "wires": [
             [
@@ -111,7 +162,7 @@
         "targetType": "msg",
         "statusVal": "payload",
         "statusType": "auto",
-        "x": 1310,
+        "x": 1290,
         "y": 660,
         "wires": []
     },
@@ -122,7 +173,7 @@
         "name": "POST Asset",
         "API": "asset/plant",
         "Method": "POST",
-        "x": 790,
+        "x": 770,
         "y": 660,
         "wires": [
             [
@@ -137,7 +188,7 @@
         "name": "Get Plant Terms",
         "API": "taxonomy_term/plant_type",
         "Method": "GET",
-        "x": 540,
+        "x": 520,
         "y": 180,
         "wires": [
             [
@@ -156,7 +207,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 770,
+        "x": 750,
         "y": 180,
         "wires": [
             [
@@ -171,7 +222,7 @@
         "name": "Get Season Terms",
         "API": "taxonomy_term/season",
         "Method": "GET",
-        "x": 530,
+        "x": 510,
         "y": 240,
         "wires": [
             [
@@ -190,7 +241,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 780,
+        "x": 760,
         "y": 240,
         "wires": [
             [
@@ -230,7 +281,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 760,
+        "x": 740,
         "y": 120,
         "wires": [
             [
@@ -244,7 +295,7 @@
         "z": "fdfd790779661d44",
         "name": "Authenticate and Get Taxanomy Terms",
         "info": "",
-        "x": 210,
+        "x": 190,
         "y": 40,
         "wires": []
     },
@@ -254,7 +305,7 @@
         "z": "fdfd790779661d44",
         "name": "Create Plant Asset from CSV",
         "info": "",
-        "x": 180,
+        "x": 160,
         "y": 580,
         "wires": []
     },
@@ -269,7 +320,7 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 150,
+        "x": 130,
         "y": 800,
         "wires": [
             [
@@ -283,7 +334,7 @@
         "z": "fdfd790779661d44",
         "name": "Create Transplanting log from CSV",
         "info": "",
-        "x": 200,
+        "x": 180,
         "y": 740,
         "wires": []
     },
@@ -298,7 +349,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 980,
+        "x": 960,
         "y": 660,
         "wires": [
             [
@@ -313,7 +364,7 @@
         "name": "Get Unit Terms",
         "API": "taxonomy_term/unit",
         "Method": "GET",
-        "x": 540,
+        "x": 520,
         "y": 300,
         "wires": [
             [
@@ -332,7 +383,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 760,
+        "x": 740,
         "y": 300,
         "wires": [
             [
@@ -345,7 +396,7 @@
         "type": "function",
         "z": "fdfd790779661d44",
         "name": "farmOS Import length FB CSV",
-        "func": "//Declare variables\nvar unit = \"m\"\n\n//Declare Variables from CSV\nvar length = msg.payload[\"length FB\"];\nvar nr = msg.payload[\"Nr plants FB\"];\nvar name = msg.payload.Name;\nvar description = msg.payload.Description;\nvar land = msg.payload[\"Area/Location\"];\n\n//Get flow Variables\nvar unit_terms = flow.get(\"unit_terms\");\nvar plant_uuid = flow.get(\"plant_uuid\");\nvar land_uuid = flow.get(\"land_uuid\");\n\n\n//Declare empty variables\nvar plant_id = null;\nvar land_id = null;\nvar unit_id = null;\n\n//Generate UUID's\nvar Luuid = uuid.v1();\nvar Nruuid = uuid.v1();\n\n\n//search for plant uuid \nplant_uuid.forEach(data => {\n\tif (data.name == name) {\n\t\tplant_id = data.id;\n\t}\n})\n\n//Search for land uuid\n\nland_uuid.forEach(data => {\n\tif (data.name == land) {\n\t\tland_id = data.id;\n\t}\n})\n\n\n//Search for plant term uuid\nunit_terms.forEach(data => {\n\tif (data.name == unit) {\n\t\tunit_id = data.id;\n\t}\n})\n\n\n\nif (plant_id != null && land_id != null && unit_id != null) {\n\n    \nvar numerator = length;\nvar denominator = 1;\nwhile (numerator % 1) numerator *= 10;\ndenominator = numerator / length;\n\n\n//Create Quntity \nvar len = {\n  \"data\": {\n\t\"type\": \"quantity--standard\",\n\t\"id\": Luuid,\n\t\"attributes\": {\n\t\t\"measure\": \"length\",\n\t\t\"value\": {\n\t\t    \"numerator\":numerator,\n\t\t    \"denominator\":denominator\n\t\t},\n\t\t\"label\": \"length FB\"\n\t},\n\t\"relationships\": {\n\t\t\"units\": {\n\t\t\t\"data\": {\n\t\t\t\t\"type\": \"taxonomy_term--unit\",\n\t\t\t\t\"id\": unit_id\n\t\t\t}\n\t\t}\n\t}\n}   \n}\nmsg.length = JSON.stringify(len);\n\n//Create Quantity\nvar nrp = {\n\t\"data\": {\n\t\t\"type\": \"quantity--standard\",\n\t\t\"id\": Nruuid,\n\t\t\"attributes\": {\n\t\t\t\"measure\": \"count\",\n\t\t\t\"value\": {\n\t\t\t\t\"numerator\": nr,\n\t\t\t\t\"denominator\": 1\n\t\t\t},\n\t\t\t\"label\": \"Nr plants FB\"\n\t\t}\n\t}\n\n  }\nmsg.nr = JSON.stringify(nrp);\n\n\n\n\t//Create Asset Object \n\tvar log = {\n\t\t\"data\": {\n\t\t\t\"type\": \"log--transplanting\",\n\t\t\t\"attributes\": {\n\t\t\t\t\"data\": name,\n\t\t\t\t\"status\": \"done\",\n\t\t\t\t\"notes\": {\n\t\t\t\t\t\"value\": description\n\t\t\t\t},\n\t\t\t\t\"flag\": [],\n\t\t\t\t\"is_movement\": true\n\t\t\t},\n\t\t\t\"relationships\": {\n\t\t\t\t\"location\": {\n\t\t\t\t\t\"data\": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"type\": \"asset--land\",\n\t\t\t\t\t\t\t\"id\": land_id\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\t\"asset\": {\n\t\t\t\t\t\"data\": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"type\": \"asset--plant\",\n\t\t\t\t\t\t\t\"id\": plant_id\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\t\"quantity\": {\n\t\t\t\t\t\"data\": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"type\": \"quantity--standard\",\n\t\t\t\t\t\t\t\"id\": Luuid,\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"type\": \"quantity--standard\",\n\t\t\t\t\t\t\t\"id\": Nruuid,\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\nmsg.log = JSON.stringify(log);\n}\n\n\n\n\nreturn msg;",
+        "func": "//Declare variables\nvar unit = \"m\"\n\n//Declare Variables from CSV\nvar length = msg.payload[\"length FB\"];\nvar nr = msg.payload[\"Nr plants FB\"];\nvar name = msg.payload.Name;\nvar description = msg.payload.Description;\nvar land = msg.payload[\"Area/Location\"];\n\n//Get flow Variables\nvar unit_terms = flow.get(\"unit_terms\");\nvar plant_uuid = flow.get(\"plant_uuid\");\nvar land_uuid = flow.get(\"land_uuid\");\n\n//Declare empty variables\nvar plant_id = null;\nvar land_id = null;\nvar unit_id = null;\n\n//Generate UUID's\nvar Luuid = uuid.v1();\nvar Nruuid = uuid.v1();\n\n//search for plant uuid \nplant_uuid.forEach(data => {\n\tif (data.name == name) {\n\t\tplant_id = data.id;\n\t}\n})\n\n//Search for land uuid\nland_uuid.forEach(data => {\n\tif (data.name == land) {\n\t\tland_id = data.id;\n\t}\n})\n\n//Search for plant term uuid\nunit_terms.forEach(data => {\n\tif (data.name == unit) {\n\t\tunit_id = data.id;\n\t}\n})\n\nif (plant_id != null && land_id != null && unit_id != null) {\n\nmsg.req = [];\n\n//Create Quntity \nvar req1 = {\n\t\"action\": \"create\",\n\t\"body\": {\n  \t\t\"data\": {\n\t\t\t\"type\": \"quantity--standard\",\n\t\t\t\"id\": Luuid,\n\t\t\t\"attributes\": {\n\t\t\t\t\"measure\": \"length\",\n\t\t\t\t\"value\": {\n\t\t    \t\t\"numerator\":length,\n\t\t    \t\t\"denominator\": 1,\n\t\t\t\t\t\"decimal\": length\n\t\t\t\t},\n\t\t\t\t\"label\": \"length FB\"\n\t\t\t},\n\t\t\t\"relationships\": {\n\t\t\t\t\"units\": {\n\t\t\t\t\t\"data\": {\n\t\t\t\t\t\t\"type\": \"taxonomy_term--unit\",\n\t\t\t\t\t\t\"id\": unit_id\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}   \n\t}\n}\nmsg.req.push(req1)\n\n//Create Quantity\nvar req2 = {\n\t\"action\": \"create\",\n\t\"body\": {\n\t\t\"data\": {\n\t\t\t\"type\": \"quantity--standard\",\n\t\t\t\"id\": Nruuid,\n\t\t\t\"attributes\": {\n\t\t\t\t\"measure\": \"count\",\n\t\t\t\t\"value\": {\n\t\t\t\t\t\"numerator\": nr,\n\t\t\t\t\t\"denominator\": 1,\n\t\t\t\t\t\"decimal\": nr\n\t\t\t\t},\n\t\t\t\t\"label\": \"Nr plants FB\"\n\t\t\t}\n\t\t}\n  \t}\n}\t  \n\tmsg.req.push(req2)\n\n\t//Create Asset Object \nvar req3 = {\n\t\"action\": \"create\",\n\t\"waitFor\": [\"req-1\", \"req-2\"],\n\t\"body\": {\n\t\t\"data\": {\n\t\t\t\"type\": \"log--transplanting\",\n\t\t\t\"attributes\": {\n\t\t\t\t\"data\": name,\n\t\t\t\t\"status\": \"done\",\n\t\t\t\t\"notes\": {\n\t\t\t\t\t\"value\": description\n\t\t\t\t},\n\t\t\t\t\"flag\": [],\n\t\t\t\t\"is_movement\": true\n\t\t\t},\n\t\t\t\"relationships\": {\n\t\t\t\t\"location\": {\n\t\t\t\t\t\"data\": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"type\": \"asset--land\",\n\t\t\t\t\t\t\t\"id\": land_id\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\t\"asset\": {\n\t\t\t\t\t\"data\": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"type\": \"asset--plant\",\n\t\t\t\t\t\t\t\"id\": plant_id\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\t\"quantity\": {\n\t\t\t\t\t\"data\": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"type\": \"quantity--standard\",\n\t\t\t\t\t\t\t\"id\": Luuid,\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"type\": \"quantity--standard\",\n\t\t\t\t\t\t\t\"id\": Nruuid,\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\t\n\tmsg.req.push(req3)\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -356,11 +407,11 @@
                 "module": "uuid"
             }
         ],
-        "x": 530,
+        "x": 510,
         "y": 800,
         "wires": [
             [
-                "569dbf148deda98e"
+                "662042c48fe3b081"
             ]
         ]
     },
@@ -379,7 +430,7 @@
         "strings": true,
         "include_empty_strings": "",
         "include_null_values": "",
-        "x": 670,
+        "x": 650,
         "y": 420,
         "wires": [
             [
@@ -399,7 +450,7 @@
         "sendError": false,
         "encoding": "none",
         "allProps": false,
-        "x": 540,
+        "x": 480,
         "y": 420,
         "wires": [
             [
@@ -418,7 +469,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 830,
+        "x": 810,
         "y": 420,
         "wires": [
             [
@@ -437,7 +488,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
+        "x": 280,
         "y": 800,
         "wires": [
             [
@@ -473,7 +524,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
+        "x": 280,
         "y": 660,
         "wires": [
             [
@@ -492,7 +543,7 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 150,
+        "x": 130,
         "y": 660,
         "wires": [
             [
@@ -507,7 +558,7 @@
         "name": "Get Land assets",
         "API": "asset/land",
         "Method": "GET",
-        "x": 540,
+        "x": 520,
         "y": 360,
         "wires": [
             [
@@ -526,7 +577,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 770,
+        "x": 750,
         "y": 360,
         "wires": [
             [
@@ -540,7 +591,7 @@
         "z": "fdfd790779661d44",
         "name": "Save CSV File",
         "info": "",
-        "x": 280,
+        "x": 260,
         "y": 420,
         "wires": []
     },
@@ -556,7 +607,7 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 740,
+        "x": 720,
         "y": 80,
         "wires": []
     },
@@ -573,28 +624,9 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1290,
+        "x": 1270,
         "y": 420,
         "wires": []
-    },
-    {
-        "id": "569dbf148deda98e",
-        "type": "function",
-        "z": "fdfd790779661d44",
-        "name": "Subrequest",
-        "func": "\n\nvar token = global.get(\"token\");\nmsg.payload = [\n    {\n        \"requestId\": \"req-1\",\n        \"uri\": \"/api/quantity/standard\",\n        \"action\": \"create\",\n        \"body\": msg.length,\n        \"headers\": {\n            \"Accept\": \"application/vnd.api+json\",\n            \"Content-Type\": \"application/vnd.api+json\",\n            \"Authorization\": \"Bearer \" + token\n        }\n    },\n    {\n        \"requestId\": \"req-2\",\n        \"uri\": \"/api/quantity/standard\",\n        \"action\": \"create\",\n        \"body\": msg.nr,\n        \"headers\": {\n            \"Accept\": \"application/vnd.api+json\",\n            \"Content-Type\": \"application/vnd.api+json\",\n            \"Authorization\": \"Bearer \" + token\n        }\n    },\n    {\n        \"requestId\": \"req-3\",\n        \"waitFor\": [\"req-1\",\"req-2\"],\n        \"uri\": \"/api/log/transplanting\",\n        \"action\": \"create\",\n        \"body\": msg.log,\n        \"headers\": {\n            \"Accept\": \"application/vnd.api+json\",\n            \"Content-Type\": \"application/vnd.api+json\",\n            \"Authorization\": \"Bearer \" + token\n        }\n    }\n]\n\n\nmsg.headers = {};\nmsg.headers['Authorization'] = \"Bearer \" + token;\nmsg.headers['Accept'] = \"application/vnd.api+json\";\nmsg.headers['content-type'] = 'application/vnd.api+json';\nmsg.url = global.get('farmOSurl').concat('/subrequests?_format=json')\nmsg.method = \"POST\";\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 770,
-        "y": 800,
-        "wires": [
-            [
-                "f185619a40bf35f3"
-            ]
-        ]
     },
     {
         "id": "d93b394eaa732596",
@@ -642,6 +674,19 @@
         "wires": [
             [
                 "d93b394eaa732596"
+            ]
+        ]
+    },
+    {
+        "id": "662042c48fe3b081",
+        "type": "subflow:1387b81f8c3249db",
+        "z": "fdfd790779661d44",
+        "name": "",
+        "x": 770,
+        "y": 800,
+        "wires": [
+            [
+                "f185619a40bf35f3"
             ]
         ]
     }
