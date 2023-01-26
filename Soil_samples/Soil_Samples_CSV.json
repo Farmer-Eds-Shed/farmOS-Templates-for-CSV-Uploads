@@ -1,13 +1,248 @@
 [
     {
-        "id": "1387b81f8c3249db",
+        "id": "b481062a447e35d0",
         "type": "subflow",
-        "name": "SubRequet",
-        "info": "",
+        "name": "Store CSV",
+        "info": "## Input:\r\n**File Path:**\r\nAccepts input from a CSV file. \r\nSelect File from dropdown and provide file path.\r\n\r\n**Flow Context:**\r\nAccepts input from CSV stored in flow context. \r\nSelect Flow Context from dropdown and provide flow context path.\r\n\r\n## Output:\r\n**Required** `msg.` property `msg.payload` by default.\r\n\r\n**Optional** `flow.` to store the CSV to flow context.",
         "category": "farmOS V2",
         "in": [
             {
-                "x": 40,
+                "x": 200,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "6ddadc38a59e231a"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 860,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "f3e38a43d8f3d1ff",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "",
+                "type": "str",
+                "value": "",
+                "ui": {
+                    "label": {
+                        "en-US": "CSV Input"
+                    },
+                    "type": "none"
+                }
+            },
+            {
+                "name": "source",
+                "type": "str",
+                "value": "file",
+                "ui": {
+                    "icon": "font-awesome/fa-database",
+                    "label": {
+                        "en-US": "Input Source"
+                    },
+                    "type": "select",
+                    "opts": {
+                        "opts": [
+                            {
+                                "l": {
+                                    "en-US": "Flow Context"
+                                },
+                                "v": "context"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "File Path"
+                                },
+                                "v": "file"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "file",
+                "type": "str",
+                "value": "",
+                "ui": {
+                    "icon": "font-awesome/fa-file-text-o",
+                    "label": {
+                        "en-US": "Path/Context"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "",
+                "type": "str",
+                "value": "",
+                "ui": {
+                    "type": "none"
+                }
+            },
+            {
+                "name": "",
+                "type": "str",
+                "value": "",
+                "ui": {
+                    "label": {
+                        "en-US": "CSV Output"
+                    },
+                    "type": "none"
+                }
+            },
+            {
+                "name": "msg",
+                "type": "str",
+                "value": "payload",
+                "ui": {
+                    "icon": "font-awesome/fa-envelope-o",
+                    "label": {
+                        "en-US": "msg."
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "flow",
+                "type": "str",
+                "value": "",
+                "ui": {
+                    "icon": "font-awesome/fa-save",
+                    "label": {
+                        "en-US": "flow."
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str"
+                        ]
+                    }
+                }
+            }
+        ],
+        "meta": {},
+        "color": "#FDF0C2",
+        "icon": "node-red/parser-csv.svg"
+    },
+    {
+        "id": "f9792d16d0fd169c",
+        "type": "csv",
+        "z": "b481062a447e35d0",
+        "name": "",
+        "sep": ";",
+        "hdrin": true,
+        "hdrout": "none",
+        "multi": "mult",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 590,
+        "y": 120,
+        "wires": [
+            [
+                "f3e38a43d8f3d1ff"
+            ]
+        ]
+    },
+    {
+        "id": "f3e38a43d8f3d1ff",
+        "type": "function",
+        "z": "b481062a447e35d0",
+        "name": "Get CSV",
+        "func": "var MSG = env.get(\"msg\");\nvar Flow = env.get(\"flow\");\nvar Source = env.get(\"source\");\n\nif (Flow != \"\") {\n  flow.set(\"$parent.\" + Flow, msg.payload);\n}\n\nif (Source == \"context\") { \n  var CSV = flow.get(\"$parent.\" + Flow);\n}\n\nif (Source == \"file\") {\n  var CSV = msg.payload;\n}\nlet outputMsgs = [];\n\n//for hver \nCSV.forEach(data => {\n  outputMsgs.push({[MSG]:data});\n    })\n\nreturn [ outputMsgs ];\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "97d2e8276736c1b5",
+        "type": "file in",
+        "z": "b481062a447e35d0",
+        "name": "",
+        "filename": "file",
+        "filenameType": "env",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 450,
+        "y": 80,
+        "wires": [
+            [
+                "f9792d16d0fd169c"
+            ]
+        ]
+    },
+    {
+        "id": "6ddadc38a59e231a",
+        "type": "switch",
+        "z": "b481062a447e35d0",
+        "name": "",
+        "property": "source",
+        "propertyType": "env",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "file",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 310,
+        "y": 120,
+        "wires": [
+            [
+                "97d2e8276736c1b5"
+            ],
+            [
+                "f9792d16d0fd169c"
+            ]
+        ]
+    },
+    {
+        "id": "1387b81f8c3249db",
+        "type": "subflow",
+        "name": "SubRequet",
+        "info": "## Input:\r\nMultiple requests can be grouped together and sent to the subrequests node as an array.  <br> <br>\r\n**action:** this indicates the type of action this subrequest will execute.\r\nCommon values for this property are `view`, `create`, `update`, `replace`,\r\n`delete`, `exists` and `discover`.<br> <br>\r\n**body:** the content of the body for the subrequest.<br> <br>\r\n**waitFor:** contains an array of request ID's from another request. Indicates that the\r\ncurrent subrequest depends on the other subrequest. When this property is\r\npresent, the that particular subrequest cannot be processed until the\r\nreferenced request has generated a response.\r\nAll requests are given an ID in order of being added to the array starting at `req-1` <br> <br>\r\n## Examples:\r\n```\r\n var quantity = {\r\n        \"action\": \"create\",\r\n        \"body\": {\r\n            \"data\": {\r\n                \"type\": \"quantity--test\",\r\n                \"id\": \"474c96b2-ccbd-41d2-adbb-631354b7faa1\",\r\n                \"attributes\": {\r\n                    \"label\": \"pH\"\r\n                    \"value\": {\r\n                        \"numerator\": 2,\r\n                        \"denominator\": 1,\r\n                        \"decimal\": 2\r\n                    },\r\n                }\r\n            }\r\n        }\r\n    }\r\n msg.req.push(quantity)\r\n ```\r\n```\r\nvar log = {\r\n        \"action\": \"create\",\r\n        \"waitFor\": [\"req-1\"],\r\n        \"body\":{\r\n            \"data\": {\r\n                \"type\": \"log--lab_test\",\r\n                \"attributes\": {\r\n                    \"name\": \"Soil Test\",\r\n                    \"status\": \"done\"\r\n                },\r\n                \"relationships\": {\r\n                    \"quantity\": {\r\n                        \"data\": [\r\n                            {\r\n                               \"type\": \"quantity--test\",\r\n                               \"id\": 474c96b2-ccbd-41d2-adbb-631354b7faa1\r\n                            }\r\n                        ]\r\n                    } \r\n                }\r\n            }\r\n        }\r\n    }\r\nmsg.req.push(log)\r\n```",
+        "category": "farmOS V2",
+        "in": [
+            {
+                "x": 60,
                 "y": 80,
                 "wires": [
                     {
@@ -18,11 +253,11 @@
         ],
         "out": [
             {
-                "x": 340,
+                "x": 680,
                 "y": 80,
                 "wires": [
                     {
-                        "id": "569dbf148deda98e",
+                        "id": "e72198f66e1bd0a7",
                         "port": 0
                     }
                 ]
@@ -47,59 +282,65 @@
         "x": 190,
         "y": 80,
         "wires": [
+            [
+                "121fa1e5de2acb2a"
+            ]
+        ]
+    },
+    {
+        "id": "e72198f66e1bd0a7",
+        "type": "http request",
+        "z": "1387b81f8c3249db",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 550,
+        "y": 80,
+        "wires": [
             []
+        ]
+    },
+    {
+        "id": "121fa1e5de2acb2a",
+        "type": "delay",
+        "z": "1387b81f8c3249db",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 370,
+        "y": 80,
+        "wires": [
+            [
+                "e72198f66e1bd0a7"
+            ]
         ]
     },
     {
         "id": "d017e12d25aa8fae",
         "type": "tab",
-        "label": "Soil Samples CSV",
+        "label": "Soil Samples CSV (test)",
         "disabled": false,
         "info": "",
         "env": []
-    },
-    {
-        "id": "f9792d16d0fd169c",
-        "type": "csv",
-        "z": "d017e12d25aa8fae",
-        "name": "",
-        "sep": ";",
-        "hdrin": true,
-        "hdrout": "none",
-        "multi": "mult",
-        "ret": "\\n",
-        "temp": "",
-        "skip": "0",
-        "strings": true,
-        "include_empty_strings": "",
-        "include_null_values": "",
-        "x": 690,
-        "y": 220,
-        "wires": [
-            [
-                "f3e38a43d8f3d1ff"
-            ]
-        ]
-    },
-    {
-        "id": "066df88f557b9f8a",
-        "type": "file in",
-        "z": "d017e12d25aa8fae",
-        "name": "",
-        "filename": "/ANALYSE.DAT",
-        "filenameType": "str",
-        "format": "utf8",
-        "chunk": false,
-        "sendError": false,
-        "encoding": "none",
-        "allProps": false,
-        "x": 520,
-        "y": 220,
-        "wires": [
-            [
-                "f9792d16d0fd169c"
-            ]
-        ]
     },
     {
         "id": "4aecd432a3feab0d",
@@ -112,11 +353,11 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 350,
-        "y": 220,
+        "x": 190,
+        "y": 160,
         "wires": [
             [
-                "066df88f557b9f8a"
+                "459c9ed5790c34ea"
             ]
         ]
     },
@@ -136,38 +377,14 @@
                 "module": "uuid"
             }
         ],
-        "x": 320,
-        "y": 280,
+        "x": 540,
+        "y": 160,
         "wires": [
             [
                 "177e12f475627c3f"
             ]
         ],
         "info": "Requires External JS library:\r\nhttps://discourse.nodered.org/t/generation-of-uuid-in-function-node/2381/4\r\n\r\n# install UUID Library\r\nnpm install uuid\r\n\r\n# add to settings.js\r\n\r\n`\r\n    functionGlobalContext: {\r\n        // os:require('os'),\r\n\tuuidv1:require('C:/Users/youruser/node_modules/uuid/v1')\r\n\r\n    },\r\n`"
-    },
-    {
-        "id": "b95f31a57221b0d5",
-        "type": "http request",
-        "z": "d017e12d25aa8fae",
-        "name": "",
-        "method": "use",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 870,
-        "y": 280,
-        "wires": [
-            [
-                "a66d8e7bd9745f9d"
-            ]
-        ]
     },
     {
         "id": "a66d8e7bd9745f9d",
@@ -182,64 +399,55 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1040,
-        "y": 280,
+        "x": 900,
+        "y": 160,
         "wires": []
-    },
-    {
-        "id": "0002094ec4a90ecd",
-        "type": "delay",
-        "z": "d017e12d25aa8fae",
-        "name": "",
-        "pauseType": "rate",
-        "timeout": "5",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "allowrate": false,
-        "outputs": 1,
-        "x": 690,
-        "y": 280,
-        "wires": [
-            [
-                "b95f31a57221b0d5"
-            ]
-        ]
-    },
-    {
-        "id": "f3e38a43d8f3d1ff",
-        "type": "function",
-        "z": "d017e12d25aa8fae",
-        "name": "Get CSV",
-        "func": "//var CSV = flow.get(\"CSV\");\nvar CSV = msg.payload;\nlet outputMsgs = [];\n\n//for hver \nCSV.forEach(data => {\n  outputMsgs.push({payload:data});\n    })\n\nreturn [ outputMsgs ];\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 840,
-        "y": 220,
-        "wires": [
-            [
-                "66b87a5f059ed311"
-            ]
-        ]
     },
     {
         "id": "177e12f475627c3f",
         "type": "subflow:1387b81f8c3249db",
         "z": "d017e12d25aa8fae",
         "name": "",
-        "x": 510,
-        "y": 280,
+        "x": 730,
+        "y": 160,
         "wires": [
             [
-                "0002094ec4a90ecd"
+                "a66d8e7bd9745f9d"
+            ]
+        ]
+    },
+    {
+        "id": "459c9ed5790c34ea",
+        "type": "subflow:b481062a447e35d0",
+        "z": "d017e12d25aa8fae",
+        "name": "",
+        "env": [
+            {
+                "name": "file",
+                "value": "/ANALYSE.DAT",
+                "type": "str"
+            },
+            {
+                "name": "flow",
+                "value": "test",
+                "type": "str"
+            },
+            {
+                "name": "location",
+                "value": "",
+                "type": "str"
+            },
+            {
+                "name": "save",
+                "value": "false",
+                "type": "bool"
+            }
+        ],
+        "x": 350,
+        "y": 160,
+        "wires": [
+            [
+                "66b87a5f059ed311"
             ]
         ]
     }
